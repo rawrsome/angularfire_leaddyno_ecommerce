@@ -1,0 +1,20 @@
+{
+  "name": "angularfire_recurly_leaddyno_test",
+  "description": "A starter project for AngularJS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/puritycosmetics/angularfire_recurly_leaddyno_test",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-bootstrap": "~0.13.3",
+    "angular-loader": "~1.4.0",
+    "angular-material": "~0.10.1",
+    "angular-mocks": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-spinner": "~0.6.2",
+    "angularfire": "~1.1.2",
+    "firebase": "~2.2.9",
+    "html5-boilerplate": "~5.2.0"
+  }
+}

@@ -1,0 +1,38 @@
+{"products": [
+	{
+		"id": 1,
+		"title": "Sultry Strawberry Set",
+		"image": "images/sultry_grande.jpg",
+		"price": 25
+	},
+	{
+		"id": 2,
+		"title": "Pink Cheeks Strawberry Set",
+		"image": "images/pinkcheek_grande.jpg",
+		"price": 50
+	},
+	{
+		"id": 3,
+		"title": "Neopolitan Set",
+		"image": "images/neopolitan_grande.png",
+		"price": 13
+	},
+	{
+		"id": 4,
+		"title": "Naked Strawberry Set",
+		"image": "images/naked_grande.jpg",
+		"price": 18
+	},
+	{
+		"id": 5,
+		"title": "Boxed Fruit Body Scrub Set",
+		"image": "images/boxedfruit_grande.jpeg",
+		"price": 10
+	},
+	{
+		"id": 6,
+		"title": "Baby Set",
+		"image": "images/babyset_grande.jpg",
+		"price": 12
+	}
+]}
