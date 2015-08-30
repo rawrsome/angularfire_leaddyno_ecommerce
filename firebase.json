@@ -1,5 +1,5 @@
 {
-  "firebase": "angularfire-purebox",
+  "firebase": "angular-purebox03",
   "public": "public/",
   "ignore": [
     "firebase.json",

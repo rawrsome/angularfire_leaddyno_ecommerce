@@ -15,8 +15,8 @@ App.config(['$routeProvider', function($routeProvider, $window) {
 
 // ====> AccountCtrl
 App.controller('AccountCtrl', [
-	'currentAuth', '$scope', '$firebaseObject', '$modal', '$firebaseAuth', 'AuthFactory',
-	function(currentAuth, $scope, $firebaseObject, $modal, $firebaseAuth, AuthFactory) {
+	'$scope', '$firebaseObject', '$modal', '$firebaseAuth', 'AuthFactory',
+	function($scope, $firebaseObject, $modal, $firebaseAuth, AuthFactory) {
 		// currentAuth (provided by resolve) will contain the
  		// authenticated user or null if not logged in
 	}

@@ -15,8 +15,9 @@ App.config(['$routeProvider', function($routeProvider, $window) {
 // <==== end route declarations
 
 // connecting with firebase to use 'ref' as callback
-var ref = new Firebase('https://angular-purebox02.firebaseio.com/');
 
+		var ref = new Firebase('https://angular-purebox03.firebaseio.com');
+		
 
 // ====> HomeCtrl
 App.controller('HomeCtrl', [
@@ -34,18 +35,23 @@ App.controller('AuthCtrl', [
 	function($scope, $rootScope, $firebaseObject, $modal, $firebaseAuth) {
 
 		// pass 'ref' to right and read to firebase
-		$rootScope.auth = $firebaseAuth(ref);
-
-
+		// $rootScope.auth = $firebaseAuth(ref);
+		// console.log($rootScope.auth);
+		$scope.auth = $firebaseAuth(ref);
+		
+		
 		// ---> login
 		$scope.signIn = function() {
-			
-			$rootScope.auth.$authWithPassword({
+			$scope.auth.$authWithPassword({
 				email:  $scope.email,
 				password: $scope.password
-			}).then(function(authData) {
-				$rootScope.alert.message = '';
-				console.log('Logged in as: ', authData.uid);
+			}).then(function(userData) {
+				$scope.alert.message = '';
+				console.log('Logged in as: ', userData.uid);
+				// console.log(userData.password.email);
+				console.log($scope.auth);
+				$scope.auth = userData;
+				console.log($scope.auth);
 			}, function(error) {
 				if(error = 'INVALID_EMAIL') {
 					$rootScope.alert.message = '';
@@ -63,39 +69,43 @@ App.controller('AuthCtrl', [
 
 		// ---> register
 		$scope.signUp = function() {
-
-			$rootScope.auth.$createUser({
+			$scope.auth.$createUser({
 				email: $scope.email,
 				password: $scope.password
-			}).then(function(authData) {
-
+			}).then(function(userData) {
 				// ---> save user profile to database
 				var isNewUser = true;
 
-				ref.onAuth(function(authData) {
-					if(authData && isNewUser) {
+				ref.onAuth(function(userData) {
+					if(userData && isNewUser) {
 						// save the user's profile into the database so we can list users,
 			          	// use them in Security and Firebase Rules, and show profiles
-			          	ref.child('users').child(authData.uid).set({
-			          		provider: authData.provider,
-			          		email: getEmail(authData)
+			          	ref.child('users').child(userData.uid).set({
+			          		provider: userData.provider,
+			          		email: getEmail(userData)
 			          	});
 					}
 				});
 				// find a suitable name based on the meta info given by each provider
-				function getEmail(authData) {
-					switch(authData.provider) {
+				function getEmail(userData) {
+					switch(userData.provider) {
 						case 'password':
-							return authData.password.email
+							return userData.password.email
 							// return authData.password.email.replace(/@.*/, '');
 						case 'twitter':
-							return authData.twitter.displayName;
+							return userData.twitter.displayName;
 						case 'facebook':
-							return authData.facebook.displayName;		
+							return userData.facebook.displayName;		
 					}
 				}
 				// <--- end save user profile
-				console.log('Logged in as: ', authData.uid);
+				console.log("User " + userData.uid + " created successfully!");
+				return $scope.auth.$authWithPassword({
+					email: $scope.email,
+					password: $scope.password
+				});
+			}).then(function(userData) {
+				console.log("Logged in as:", userData.uid);
 			}, function(error) {
 				if(!error) {
 					$rootScope.alert.message = '';
@@ -105,7 +115,7 @@ App.controller('AuthCtrl', [
 				}
 			});
 		};
-		// <--- end register
+		// <--- end register		
 	}
 	]);
 // <==== AuthCtrl
