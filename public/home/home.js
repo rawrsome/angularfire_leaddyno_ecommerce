@@ -2,11 +2,15 @@
 
 // *inject firebase.js module from bower
 var App = angular.module('myApp.home', [
-	'ngRoute', 'firebase', 'ui.bootstrap', 'ngAnimate', 'angularSpinner'
+	'ngRoute', 'firebase', 'ui.bootstrap', 'ngAnimate', 'angularSpinner','angularPayments', 'ngCookies'
 	]);
 
 // ====> route declarations
 App.config(['$routeProvider', function($routeProvider, $window) {
+
+	recurly.configure('sjc-17qcx07uRgUUxXLBx4HIAw');
+	// window.Stripe.setPublishableKey('pk_test_ir3pQ7Xr2fy8TgUcYrDWXmkG');
+
 	$routeProvider.when('/home', {
 		templateUrl: 'home/home.html',
 		controller: 'HomeCtrl'
@@ -15,18 +19,98 @@ App.config(['$routeProvider', function($routeProvider, $window) {
 // <==== end route declarations
 
 // connecting with firebase to use 'ref' as callback
-
-		var ref = new Firebase('https://angular-purebox03.firebaseio.com');
+var ref = new Firebase('https://angular-purebox03.firebaseio.com/');
 		
 
 // ====> HomeCtrl
 App.controller('HomeCtrl', [
-	'$scope', '$firebaseObject', '$modal', '$firebaseAuth', 
+	'$scope', '$firebaseObject', '$modal', '$firebaseAuth',
 	function($scope, $firebaseObject, $modal, $firebaseAuth) {
-		
+		// if ($location.path() === '') {
+		// 	$location.path('home/home.html');
+		// }
+		$scope.animationsEnabled = true;
+		$scope.cart = [];
+
+		$scope.products = $firebaseObject(ref.child('products'));
+		console.log($scope.products);
+
+		$scope.addToCart = function(product) {
+			var found = false;
+			$scope.cart.forEach(function(item) {
+				if(item.id === product.id) {
+					item.quantity++;
+					found = true;
+				}
+			});
+			if(!found) {
+				$scope.cart.push(angular.extend({
+					quantity: 1
+				}, product));
+			}
+		};
+
+		$scope.getCartPrice = function() {
+			var total = 0;
+			$scope.cart.forEach(function(product) {
+				total += product.price * product.quantity;
+			});
+			return total;
+		}
+ 		
+		$scope.checkOut = function() {
+			console.log('Launching checkout modal ====>');
+			var modalInstance = $modal.open({
+				animation: $scope.animationsEnabled,
+				templateUrl: 'checkout/checkout.html',
+				controller: 'HomeCtrl',
+				resolve: {
+					totalAmount: $scope.getCartPrice
+				}
+			})
+		};
+
+		$scope.toggleAnimation = function () {
+		    $scope.animationsEnabled = !$scope.animationsEnabled;
+		};
+
+
+		// $scope.totalAmount = totalAmount;
+
+		// $scope.onSubmit = function() {
+		// 	$scope.processing = true;
+		// };
+		console.log('in CheckoutCtrl!');
+		$scope.handleRecurly = function(status, res) {
+			console.log('in CheckoutCtrl!');
+			if(res.error) {
+				console.log(res.error.message);
+				$scope.stripeError = res.error.message;
+			} else {
+				var stripeToken = res.id
+	            console.log('GOT TOKEN', stripeToken);
+			}
+		};
+
+		$scope.hideAlerts = function() {
+			$scope.stripeError = null;
+			$scope.stripeToken = null;
+		};
+
 	}
 	]);
 // <==== end HomeCtrl 
+
+
+
+
+// ====> AlertCtrl
+App.controller('AlertCtrl', [
+	'$scope', '$rootScope', function($scope, $rootScope) {
+		$rootScope.alert = {}
+	}
+	]);
+// <==== end AlertCtrl
 
 
 // ====> AuthCtrl
@@ -35,10 +119,8 @@ App.controller('AuthCtrl', [
 	function($scope, $rootScope, $firebaseObject, $modal, $firebaseAuth) {
 
 		// pass 'ref' to right and read to firebase
-		// $rootScope.auth = $firebaseAuth(ref);
-		// console.log($rootScope.auth);
 		$scope.auth = $firebaseAuth(ref);
-		
+		var offAuth;
 		
 		// ---> login
 		$scope.signIn = function() {
@@ -47,11 +129,16 @@ App.controller('AuthCtrl', [
 				password: $scope.password
 			}).then(function(userData) {
 				$scope.alert.message = '';
-				console.log('Logged in as: ', userData.uid);
-				// console.log(userData.password.email);
-				console.log($scope.auth);
+
+				$scope.auth.$onAuth(function(userData) {
+				  	if(userData) {
+				    console.log("Logged in as: ", userData.uid);
+				  	} else {
+				    console.log("Logged out!");
+				  	}
+				});
 				$scope.auth = userData;
-				console.log($scope.auth);
+
 			}, function(error) {
 				if(error = 'INVALID_EMAIL') {
 					$rootScope.alert.message = '';
@@ -59,13 +146,14 @@ App.controller('AuthCtrl', [
 					// if not register ---> then register and sign in
 					$scope.signUp();
 				} else if (error = 'INVALID_PASSWORD') {
-					console.log('Wrong password!');
+					console.log('Wrong login or password!');
 				} else {
 					console.log(error);
 				}
 			});
 		};
 		// <--- end login
+
 
 		// ---> register
 		$scope.signUp = function() {
@@ -105,7 +193,14 @@ App.controller('AuthCtrl', [
 					password: $scope.password
 				});
 			}).then(function(userData) {
-				console.log("Logged in as:", userData.uid);
+				$scope.auth.$onAuth(function(userData) {
+				  	if(userData) {
+				    console.log("Logged in as: ", userData.uid);
+				  	} else {
+				    console.log("Logged out");
+				  	}
+				});
+				$scope.auth = userData;
 			}, function(error) {
 				if(!error) {
 					$rootScope.alert.message = '';
@@ -115,16 +210,15 @@ App.controller('AuthCtrl', [
 				}
 			});
 		};
-		// <--- end register		
-	}
-	]);
-// <==== AuthCtrl
+		// <--- end register
 
 
-// ====> AlertCtrl
-App.controller('AlertCtrl', [
-	'$scope', '$rootScope', function($scope, $rootScope) {
-		$rootScope.alert = {}
+		// ---> unauth user
+		$scope.signOut = function() {
+			var auth = $firebaseAuth(ref);
+			auth.$unauth();
+		};
+		// <--- end unauth
 	}
 	]);
-// <==== end AlertCtrl
+// <==== end AuthCtrl

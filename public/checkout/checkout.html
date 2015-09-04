@@ -1,0 +1,148 @@
+
+
+<div class="container" ng-controller="HomeCtrl">
+
+    <div class="row">
+        <div class="span4 offset4">
+	        <div class="row">
+	            
+	            <div class="span4">
+	              	<h3>Shut up and take my money!</h3>
+	            </div>
+	            
+	            <form recurly-form="handleRecurly" name="myForm">
+
+	              	<div class="span3">
+	                	<label for="">Card number</label>
+	                	<input type="text" 
+		                    name="number" 
+		                    class="input-block-level" 
+		                    ng-model="payment.number" 
+		                    payments-validate="card" payments-format="card" 
+		                    payments-type-model="type" ng-class="myForm.number.$card.type"/>
+	              	</div>
+	              
+	              	<div class="span1">
+		                <label for="">Expiry</label>
+		                <input type="text" name="expiry" class="input-block-level" ng-model="payment.expiry" payments-validate="expiry" payments-format="expiry" />
+	              	</div>
+	              
+	             	 <div class="span3">
+	                	<label for="">Name on card </label>
+	                	<input type="text" name="name" ng-model='payment.name' class="input-block-level">
+	              	</div>
+	              
+	              	<div class="span1">
+	                	<label for="">CVC</label>
+	                	<input type="text" name="cvc" class="input-block-level" ng-model="payment.cvc" payments-validate="cvc" payments-format="cvc" payments-type-model="type"/>
+	              	</div>
+
+	              	<div class="span3">
+		                <label for="zip">Zipcode</label>
+		                <input type="text"
+		                        name="addressZip"
+		                        class="input-block-level"
+		                        ng-model='payment.addressZip'
+	                        >
+	              	</div>
+
+	              <input type="hidden" ng-model='payment.signature' name='signature'>
+	              <input type="hidden" ng-model='payment.account_code' name='account_code'>
+	              <input type="hidden" ng-model='payment.plan_code' name="plan_code" ng-value="basic">
+	              <input type="hidden" ng-model='payment.quantity' name="quantity" ng-value="1">
+
+	              	<div class="clearfix">
+						<div class="right">
+							<button class="cancel" ng-click="$dismiss();">Cancel</button>
+							<button type="submit" ng-disabled="checkoutForm.$invalid">Place Order</button>
+						</div>
+					</div>
+
+	             <alert ng-if="stripeError" type="'alert'" close="hideAlerts()">
+					Stripe returned an error: {{stripeError}}
+				</alert>
+
+				<alert ng-if="stripeToken" close="hideAlerts()">
+					Stripe successfully acquired! Token: {{stripeToken}}
+				</alert>
+	            </form>
+
+	        </div>
+        </div>
+    </div>
+
+    </div>
+
+
+
+
+<!-- <form name="myForm" recurly-form="handleRecurly" ng-submit="onSubmit()" data-abide>
+
+	<div ng-if="processing" us-spinner></div>
+
+	<fieldset>
+		<legend>Shipping Information</legend>
+
+		<div class="row">
+
+			<label class="large-12 columns">Name
+				<input ng-model="name" type="text" placeholder="Name">
+			</label>
+
+			<label class="large-12 columns">Address
+				<input ng-model="address" type="text" placeholder="Address">
+			</label>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>Payment Information</legend>
+
+		<div class="row">
+			<div class="large-6 columns" ng-class="{error: checkoutForm.number.$invalid}">
+				<label>Card Information
+					<input ng-model="number" name="number" payments-format="card" payments-validate="card"
+					       placeholder="Card Number" type="text"/>
+				</label>
+				<small class="error">Invalid card number</small>
+			</div>
+			<div class="large-3 columns" ng-class="{error: checkoutForm.expiry.$invalid}">
+				<label>Expiry
+					<input ng-model="expiry" name="expiry" payments-format="expiry" payments-validate="expiry"
+					       placeholder="Expiry" type="text"/>
+				</label>
+				<small class="error">Invalid date.</small>
+			</div>
+			<div class="large-3 columns" ng-class="{error: checkoutForm.cvc.$invalid}">
+				<label>CVC
+					<input ng-model="cvc" name="cvc" payments-format="cvc" payments-validate="cvc"
+					       placeholder="CVC" type="text"/>
+				</label>
+				<small class="error">Invalid CVC.</small>
+			</div>
+
+			<div class="large-12 columns">
+				<strong>
+					Amount to pay: {{totalAmount}}$
+				</strong>
+			</div>
+		</div>
+	</fieldset>
+
+	<alert ng-if="stripeError" type="'alert'" close="hideAlerts()">
+		Stripe returned an error: {{stripeError}}
+	</alert>
+
+	<alert ng-if="stripeToken" close="hideAlerts()">
+		Stripe successfully acquired! Token: {{stripeToken}}
+	</alert>
+
+	<div class="clearfix">
+		<div class="right">
+			<button class="cancel" ng-click="$dismiss();">Cancel</button>
+			<button type="submit" ng-disabled="checkoutForm.$invalid">Place Order</button>
+		</div>
+	</div>
+
+</form>
+ -->

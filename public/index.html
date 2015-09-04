@@ -18,6 +18,8 @@
   <!-- LeadDyno -->
   <script type="text/javascript" src="https://static.leaddyno.com/js"></script>
 
+  <!-- jQuery for Recurly -->
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   
   
   <!-- CSS libraries -->
@@ -41,6 +43,7 @@
   <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
   <!-- full build angular bootstrap -->
   <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
   <!-- custom built angular ui-bootstrap dependent of angular-animate -->
   <!-- <script src="ui-bootstrap-custom-build/ui-bootstrap-custom-0.13.3.min.js"></script> -->
@@ -50,6 +53,13 @@
   <!-- app.js -->
   <script src="app.js"></script>
   
+  <!-- recurly.js -->
+  <script src="https://js.recurly.com/v3/recurly.js"></script>
+  <!-- stripe.js -->
+  <!-- <script type="text/javascript" src="https://js.stripe.com/v2/"></script> -->
+
+
+  <script src="bower_components/angular-payments/lib/angular-payments.js"></script>
   <!-- test use: -->
   <!--<script src="bower_components/angular/angular.js"></script>-->
   <!--<script src="bower_components/angular-route/angular-route.js"></script>-->
@@ -57,8 +67,9 @@
 
   <!-- view templates & logic -->
   <script src="home/home.js"></script>
-  <script src="account/account.js"></script>
-
+  <script src="dashboard/dashboard.js"></script>
+  <!-- <script src="checkout/checkout.js"></script> -->
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
   <!-- components -->
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>

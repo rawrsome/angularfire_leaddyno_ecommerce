@@ -17,3 +17,7 @@ styling to your application:
     width: 100%;
   }
 }
+
+.ng-invalid {
+    color: red;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+ 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>100% Pure Fire!</title>
+</head>
+ 
+<body ng-controller="DashboardCtrl" ng-cloak>
+
+    <nav class="top-bar" data-topbar="">
+        <ul class="title-area">
+            <li class="name">
+                <h1>
+                    <a href="#/home">100% Pure Firestorm Store</a>
+                </h1>
+            </li>
+            <a href="#/home">Home</a>
+            <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <form ng-submit="saveProduct()">
+            <div class="form-group">
+                <div class="row">
+                    <input ng-model="product.title" placeholder="Item title" class="form-control" type="text" />
+                    <input ng-model="product.price" class="form-control" type="number" />
+                    <button ng-click="addProduct(product);" type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+           
+    </div>
+</body>
+
+</html>
